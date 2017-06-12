@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <math.h>
+
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -30,6 +32,10 @@ public:
 
   ///* predicted sigma points matrix
   MatrixXd Xsig_pred_;
+
+  // Sigma points matrix 
+
+  MatrixXd Xsig;
 
   ///* time when the state is true, in us
   long long time_us_;
@@ -66,6 +72,34 @@ public:
 
   ///* Sigma point spreading parameter
   double lambda_;
+
+  
+  MatrixXd Xsig_aug;
+
+  VectorXd x_aug;
+
+  //create augmented state covariance
+  MatrixXd P_aug;
+
+  double delta_t;
+
+  MatrixXd Zsig;
+
+  int n_z;
+
+  MatrixXd S;
+
+  MatrixXd Tc;
+
+  MatrixXd z_pred;
+
+  VectorXd z;
+
+  MatrixXd H_laser_;
+
+  double NIS_laser_;
+
+  double NIS_radar_;
 
 
   /**
@@ -106,17 +140,28 @@ public:
   /**
    * Generates the sigma points from Sig out
    */
-  void GenerateSigmaPoints(MatrixXd* Xsig_out);
+  void GenerateSigmaPoints();
 
   /**
    * Augmenting the sigma points
    */
-  void AugmentedSigmaPoints(MatrixXd* Xsig_out);
+  void AugmentedSigmaPoints();
 
   /**
    * Predict sigma points
    */
-  void SigmaPointPrediction(MatrixXd* Xsig_out);
+  void SigmaPointPrediction();
+
+  /**
+  * Predicted state mean and covarience  
+  */
+  void PredictMeanAndCovariance();
+
+  /**
+  *  
+  */
+  double normalizeAngle(double angle);
+
 };
 
 #endif /* UKF_H */
