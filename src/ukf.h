@@ -85,7 +85,9 @@ public:
 
   MatrixXd Zsig;
 
-  int n_z;
+  int n_z_lidar;
+
+  int n_z_radar;
 
   MatrixXd S;
 
@@ -142,11 +144,6 @@ public:
   void UpdateRadar(MeasurementPackage meas_package);
 
   /**
-   * Generates the sigma points from Sig out
-   */
-  void GenerateSigmaPoints();
-
-  /**
    * Augmenting the sigma points
    */
   void AugmentedSigmaPoints();
@@ -162,9 +159,9 @@ public:
   void PredictMeanAndCovariance();
 
   /**
-  *  
+  *  normalize angles between pi and -pi 
   */
-  double normalizeAngle(double angle);
+  void normalizeAngle(double& angle);
 
 };
 
