@@ -30,6 +30,7 @@ UKF::UKF() {
 
 	// initial state vector
 	x_ = VectorXd(n_x_);
+	x_.fill(0.2);
 
 	// initial covariance matrix
 	P_ = MatrixXd(n_x_, n_x_);
@@ -38,7 +39,7 @@ UKF::UKF() {
 	std_a_ = 10.0;
 
 	// Process noise standard deviation yaw acceleration in rad/s^2
-	std_yawdd_ = 0.35;
+	std_yawdd_ = 0.30;
 
 	// Laser measurement noise standard deviation position1 in m
 	std_laspx_ = 0.15;
@@ -119,7 +120,7 @@ void UKF::AugmentedSigmaPoints() {
 	x_aug.head(5) = x_;
 
 	//create augmented covariance matrix
-	P_aug.fill(0.0);
+	P_aug.fill(0.0003);
 	P_aug.topLeftCorner(5, 5) = P_;
 	P_aug(5, 5) = std_a_ * std_a_;
 	P_aug(6, 6) = std_yawdd_ * std_yawdd_;
@@ -194,7 +195,7 @@ void UKF::PredictMeanAndCovariance() {
 	}
 
 	//predicted state covariance matrix
-	P_.fill(0.004);
+	P_.fill(0.0005);
 	for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //iterate over sigma points
 		VectorXd x_diff = Xsig_pred_.col(i) - x_;
 		//angle normalization
@@ -372,7 +373,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
 	//mean predicted measurement
 	VectorXd z_pred = VectorXd(n_z_radar);
-	z_pred.fill(0.0);
+	z_pred.fill(0.0005);
 
 	for (int i = 0; i < 2 * n_aug_ + 1; i++) {
 		z_pred = z_pred + weights_(i) * Zsig.col(i);
@@ -380,7 +381,7 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
 
 	//measurement covariance matrix S
 	MatrixXd S = MatrixXd(n_z_radar, n_z_radar);
-	S.fill(0.0);
+	S.fill(0.00003);
 	for (int i = 0; i < 2 * n_aug_ + 1; i++) {  //2n+1 simga points
 											   //residual
 		VectorXd z_diff = Zsig.col(i) - z_pred;
